@@ -21,7 +21,7 @@ if (isset($request['id'])) {
     if (requireID($request['id']) == true) {
         //execute action if set
         if (isset($request['action'])) {
-            checkAction($request['action'], $endpoint);
+            executeAction($request['action'], $endpoint);
         }
         else {
             outputStatus('400', 'No action defined');
@@ -33,7 +33,7 @@ else {
     if (requireID('') == true) {
         //execute action if set
         if (isset($request['action'])) {
-            checkAction($request['action'], $endpoint);
+            executeAction($request['action'], $endpoint);
         }
         else {
             outputStatus('400', 'No action defined');

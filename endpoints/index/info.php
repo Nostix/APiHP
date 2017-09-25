@@ -2,6 +2,7 @@
 $data = array(
     'title' => $config['title'],
     'description' => $config['description'],
+    'id required' => $config['require_id'],
     'version' => $config['version'],
     'author' => $config['author'],
     'used endpoint' => $endpoint,

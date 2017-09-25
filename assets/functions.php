@@ -9,7 +9,7 @@ if(!$connect) {
 }
 
 //check if ID exists in DB, if yes: return true
-function checkID($id) {
+function verifyID($id) {
     global $connect;
     $IdQuery = $connect->prepare("SELECT * FROM api WHERE id LIKE ?");
     $IdQuery->bind_param('s', $id);
@@ -30,8 +30,6 @@ function outputStatus($code, $notice = NULL) {
     //output status wihtout notice
     if (is_null($notice)) {
         $data = array(
-            'version' => $config['version'],
-            'author' => $config['author'],
             'status' => $config['status'][$code],
         );
         header('Content-Type: application/json');
@@ -40,8 +38,6 @@ function outputStatus($code, $notice = NULL) {
     //output status with notice
     else {
         $data = array(
-            'version' => $config['version'],
-            'author' => $config['author'],
             'status' => $config['status'][$code],
             'notice' => $notice,
         );
@@ -52,20 +48,24 @@ function outputStatus($code, $notice = NULL) {
 
 function requireID($id) {
     global $config;
+    //only require id if set in settings
     if ($config['require_id'] == 'true') {
+        //no id defined
         if ($id == '') {
             outputStatus('401', 'ID not defined');
             return false;
         }
-        //check if id is valid
-        elseif (checkID($id) == true) {
+        //id verified
+        elseif (verifyID($id) == true) {
             return true;
         }
+        //unvalid id
         else {
             outputStatus('403', 'Invalid ID');
             return false;
         }
     }
+    //do not check id if disabled in settings
     elseif ($config['require_id'] == 'false') {
         return true;
     }
@@ -78,23 +78,24 @@ function getEndpointActions() {
     $endpoints = glob('endpoints' . '/*' , GLOB_ONLYDIR);
     //get actions for each endpoint
     foreach ($endpoints as $point) {
+        //scan for files(actions) in every endpoint directory
         $point = str_replace('endpoints/', '', $point);
         $allActions = scandir('endpoints/'.$point);
         $actions = array_diff($allActions, array('.', '..'));
         $actionsArray = array();
-        //remove .php extention from actions
+        //remove .php extention from files(actions)
         foreach ($actions as $action) {
             $action = str_replace('.php', '', $action);
             array_push($actionsArray, $action);
         }
-        //push endpoint and actions to array
+        //push endpoint and matching actions to final array
         $endpointActionArray[$point] = $actionsArray;
     }
     return $endpointActionArray;
 }
 
 //check for existence of action and endpoint, if given: execute
-function checkAction($action, $endpoint) {
+function executeAction($action, $endpoint) {
     global $config;
     //cover both options for index endpoint
     if ($endpoint == '/' || $endpoint == '/index.php') {
@@ -110,14 +111,15 @@ function checkAction($action, $endpoint) {
         outputStatus('400', "Endpoint '".$endpoint."' does not exist");
         return;
     }
-    //check action, directory and file existence
+    //check action existence and execute
     if (in_array($action, $endpointActionArray[$endpoint])) {
         include('/../endpoints/'.$endpoint.'/'.$action.'.php');
     }
-    //action does not exist
+    //no action defined
     elseif ($action == '') {
         outputStatus('400', 'No action defined');
     }
+    //action does not exist
     else {
         outputStatus('400', "Action '".$action."' does not exist at endpoint '".$endpoint."'");
     }
