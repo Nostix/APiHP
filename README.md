@@ -26,14 +26,14 @@ Done.
 
 - create a new folder with the name of the endpoint in /endpoints
 - create (a) new .php file(s) with the name(s) of the action(s) in the new folder
-- everything in the php files gets executed when accessing the specific action at the endpoint
+- everything in the php file(s) gets executed when accessing the specific action(s) at the endpoint
 
 ### possibilities
 
 As already mentioned before, this is only a basic handler.
 You could handle many more parameters in every action and even add some kind of 'action-ception'.
 This is possible because every action executed is a simple PHP file in which anything can be done.
-So you literally have unlimited unlimited possibilities to realize your API!
+So you literally have unlimited possibilities to realize your API!
 
 
 
