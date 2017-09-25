@@ -5,6 +5,8 @@ return array(
     'author' => 'nostix',
     'title' => 'APiHP',
     'description' => 'A simple basis to build an API for any application.',
+    //ENABLE/DISABLE ID REQUIREMENT
+    'require_id' => 'true',
     //CHANGE THE PASSWORD FOR THE GENERATE PAGE HERE
     'generate_password' => 'ChangeMe',
     //CHANGE DATABASE CREDENTIALS HERE

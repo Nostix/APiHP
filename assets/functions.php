@@ -50,6 +50,27 @@ function outputStatus($code, $notice = NULL) {
     }
 }
 
+function requireID($id) {
+    global $config;
+    if ($config['require_id'] == 'true') {
+        if ($id == '') {
+            outputStatus('401', 'ID not defined');
+            return false;
+        }
+        //check if id is valid
+        elseif (checkID($id) == true) {
+            return true;
+        }
+        else {
+            outputStatus('403', 'Invalid ID');
+            return false;
+        }
+    }
+    elseif ($config['require_id'] == 'false') {
+        return true;
+    }
+}
+
 //return array with all endpoints and related actions
 function getEndpointActions() {
     $endpointActionArray = array();

@@ -16,6 +16,10 @@ Done.
 - enter the set password in the config.php
 - save your newly generated ID
 
+## disable the need of an ID to access the API
+
+- simply change 'require_id' to 'false' in the config.php
+
 ## creating new endpoints and actions
 
 - create a new folder with the name of the endpoint in /endpoints

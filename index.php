@@ -16,21 +16,28 @@ else {
 }
 //get endpoint
 $endpoint = strtok($_SERVER["REQUEST_URI"],'?');
-//check for unique id
-if (!isset($request['id'])) {
-     outputStatus('401', 'ID not defined');
-}
-//check if id is valid
-elseif (checkID($request['id']) == true) {
-    //check for action
-    if (isset($request['action'])) {
-        checkAction($request['action'], $endpoint);
-    }
-    else {
-        outputStatus('400', 'No action defined');
+//check id if set
+if (isset($request['id'])) {
+    if (requireID($request['id']) == true) {
+        //execute action if set
+        if (isset($request['action'])) {
+            checkAction($request['action'], $endpoint);
+        }
+        else {
+            outputStatus('400', 'No action defined');
+        }
     }
 }
+//check blank id if no id set
 else {
-    outputStatus('403', 'Invalid ID');
+    if (requireID('') == true) {
+        //execute action if set
+        if (isset($request['action'])) {
+            checkAction($request['action'], $endpoint);
+        }
+        else {
+            outputStatus('400', 'No action defined');
+        }
+    }
 }
 ?>
