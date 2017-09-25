@@ -18,9 +18,8 @@ Done.
 
 ## creating new endpoints and actions
 
-- add the desired endpoint with its actions to the 'endpoints' array in the config.php
 - create a new folder with the name of the endpoint in /endpoints
-- create a new .php file(s) with the name(s) of the actions in the new folder
+- create (a) new .php file(s) with the name(s) of the action(s) in the new folder
 - everything in the php files gets executed when accessing the specific action at the endpoint
 
 

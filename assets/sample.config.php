@@ -22,12 +22,5 @@ return array(
                 '500' => array('500' => 'Internal Server Error'),
                 '503' => array('503' => 'Service Unavailable')
                 ),
-    // DEFINE ENDPOINTS & ACTIONS HERE //
-    //
-    'endpoints' => array(
-                    'index' => array('info', 'test'),
-                ),
-    //
-    //********************************//
 );
 ?>
