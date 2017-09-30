@@ -18,9 +18,9 @@ else {
 }
 //get endpoint
 $endpoint = strtok($_SERVER["REQUEST_URI"],'?');
-//check id if set
-if (isset($request['id'])) {
-    if (requireID($request['id']) == true) {
+//check if id and user set
+if (isset($request['id']) && isset($request['user'])) {
+    if (requireID($request['id'], $request['user']) == true) {
         //execute action if set
         if (isset($request['action'])) {
             executeAction($request['action'], $endpoint);
@@ -30,9 +30,33 @@ if (isset($request['id'])) {
         }
     }
 }
-//check blank id if no id set
+//only id set
+elseif (isset($request['id']) && !isset($request['user'])) {
+    if (requireID($request['id'], '') == true) {
+        //execute action if set
+        if (isset($request['action'])) {
+            executeAction($request['action'], $endpoint);
+        }
+        else {
+            outputStatus('400', 'No action defined');
+        }
+    }
+}
+//only user set
+elseif (!isset($request['id']) && isset($request['user'])) {
+    if (requireID('', $request['user']) == true) {
+        //execute action if set
+        if (isset($request['action'])) {
+            executeAction($request['action'], $endpoint);
+        }
+        else {
+            outputStatus('400', 'No action defined');
+        }
+    }
+}
+//check blank user and if if both not set
 else {
-    if (requireID('') == true) {
+    if (requireID('', '') == true) {
         //execute action if set
         if (isset($request['action'])) {
             executeAction($request['action'], $endpoint);

@@ -7,8 +7,6 @@ return array(
     'description' => 'A simple basis to build an API for any application.',
     //ENABLE/DISABLE ID REQUIREMENT HERE
     'require_id' => 'true',
-    //CHANGE THE PASSWORD FOR THE GENERATE PAGE HERE
-    'generate_password' => 'ChangeMe',
     //CHANGE DATABASE CREDENTIALS HERE
     'db' => array(
                 'host' => 'database-host',

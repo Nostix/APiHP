@@ -17,20 +17,15 @@ if(!$connect) {
     die('Could not connect: ' . mysql_error());
 }
 
-//check if ID exists in DB, if yes: return true
-function verifyID($id) {
-    global $connect;
-    $IdQuery = $connect->prepare("SELECT * FROM api WHERE id LIKE ?");
-    $IdQuery->bind_param('s', $id);
-    $IdQuery->execute();
-    $IdQueryResult = $IdQuery->get_result();
-    $IdQueryRow = mysqli_fetch_array($IdQueryResult);
-    if($IdQueryRow==0) {
-        return false;
+//generate random string for ID
+function generateRandomString($length = 15) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
-    else {
-        return true;
-    }
+    return $randomString;
 }
 
 //output HTML-statuscode with optional notice as JSON object
@@ -55,23 +50,48 @@ function outputStatus($code, $notice = NULL) {
     }
 }
 
-function requireID($id) {
+//check if ID exists in DB, if yes: return true
+function verifyID($id, $user) {
+    global $connect;
+    $IdQuery = $connect->prepare("SELECT id FROM api WHERE user LIKE ?");
+    $IdQuery->bind_param('s', $user);
+    $IdQuery->execute();
+    $IdQueryResult = $IdQuery->get_result();
+    $IdQueryRow = mysqli_fetch_array($IdQueryResult);
+    if($IdQueryRow==0) {
+        return 'unvalid_user';
+    }
+    if(password_verify($id, $IdQueryRow[0])) {
+        return 'true';
+    }
+    else {
+        return 'unvalid_id';
+    }
+}
+
+function requireID($id, $user) {
     global $config;
     //only require id if set in settings
     if ($config['require_id'] == 'true') {
+        //no user defined
+        if ($user == '') {
+            outputStatus('401', 'User not defined');
+        }
         //no id defined
-        if ($id == '') {
+        elseif ($id == '') {
             outputStatus('401', 'ID not defined');
-            return false;
         }
         //id verified
-        elseif (verifyID($id) == true) {
+        elseif (verifyID($id, $user) == 'true') {
             return true;
         }
-        //unvalid id
-        else {
-            outputStatus('403', 'Invalid ID');
-            return false;
+        //unvalid user
+        elseif (verifyID($id, $user) == 'unvalid_user') {
+            outputStatus('401', 'Unvalid User');
+        }
+        //unvalid user
+        elseif (verifyID($id, $user) == 'unvalid_id') {
+            outputStatus('401', 'Unvalid ID');
         }
     }
     //do not check id if disabled in settings
