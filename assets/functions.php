@@ -2,7 +2,14 @@
 //include settings
 $path = $_SERVER['DOCUMENT_ROOT'];
 $path .= '/assets/config.php';
-$config = include_once($path);
+if (file_exists($path)) {
+    $config = include_once($path);
+}
+else {
+    echo '404 Error - No config file found!';
+    exit();
+}
+
 
 //establish database connection
 $connect = mysqli_connect($config['db']['host'],$config['db']['user'], $config['db']['password'], $config['db']['name']);
