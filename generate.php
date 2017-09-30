@@ -1,5 +1,7 @@
 <?php
-include('assets/functions.php');
+$path = $_SERVER['DOCUMENT_ROOT'];
+$path .= '/assets/functions.php';
+include_once($path);
 
 $createDB = "CREATE TABLE IF NOT EXISTS api (
           id TEXT

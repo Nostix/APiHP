@@ -1,6 +1,8 @@
 <?php
 //include settings
-$config = include('config.php');
+$path = $_SERVER['DOCUMENT_ROOT'];
+$path .= '/assets/config.php';
+$config = include_once($path);
 
 //establish database connection
 $connect = mysqli_connect($config['db']['host'],$config['db']['user'], $config['db']['password'], $config['db']['name']);
@@ -113,7 +115,9 @@ function executeAction($action, $endpoint) {
     }
     //check action existence and execute
     if (in_array($action, $endpointActionArray[$endpoint])) {
-        include('/../endpoints/'.$endpoint.'/'.$action.'.php');
+        $path = $_SERVER['DOCUMENT_ROOT'];
+        $path .= '/endpoints/'.$endpoint.'/'.$action.'.php';
+        include_once($path);
     }
     //no action defined
     elseif ($action == '') {

@@ -1,6 +1,8 @@
 <?php
 //include functions
-include ('assets/functions.php');
+$path = $_SERVER['DOCUMENT_ROOT'];
+$path .= '/assets/functions.php';
+include_once($path);
 
 //check for request method and set the right one for further actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
