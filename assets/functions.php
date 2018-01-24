@@ -38,6 +38,7 @@ function outputStatus($code, $notice = NULL) {
         );
         header('Content-Type: application/json');
         echo json_encode($data);
+        return;
     }
     //output status with notice
     else {
@@ -47,6 +48,7 @@ function outputStatus($code, $notice = NULL) {
         );
         header('Content-Type: application/json');
         echo json_encode($data);
+        return;
     }
 }
 
@@ -76,10 +78,12 @@ function requireID($id, $user) {
         //no user defined
         if ($user == '') {
             outputStatus('401', 'User not defined');
+            return;
         }
         //no id defined
         elseif ($id == '') {
             outputStatus('401', 'ID not defined');
+            return;
         }
         //id verified
         elseif (verifyID($id, $user) == 'true') {
@@ -88,10 +92,12 @@ function requireID($id, $user) {
         //unvalid user
         elseif (verifyID($id, $user) == 'unvalid_user') {
             outputStatus('401', 'Unvalid User');
+            return;
         }
         //unvalid user
         elseif (verifyID($id, $user) == 'unvalid_id') {
             outputStatus('401', 'Unvalid ID');
+            return;
         }
     }
     //do not check id if disabled in settings
@@ -145,14 +151,17 @@ function executeAction($action, $endpoint) {
         $path = $_SERVER['DOCUMENT_ROOT'];
         $path .= '/endpoints/'.$endpoint.'/'.$action.'.php';
         include_once($path);
+        return;
     }
     //no action defined
     elseif ($action == '') {
         outputStatus('400', 'No action defined');
+        return;
     }
     //action does not exist
     else {
         outputStatus('400', "Action '".$action."' does not exist at endpoint '".$endpoint."'");
+        return;
     }
 }
 ?>
